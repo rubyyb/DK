@@ -1,0 +1,212 @@
+<div id="container">
+    <h1>DK 녹스 사전예약</h1>
+
+    <div class="side_banner" id="sideBanner">
+        <a href="/WEB_EVENT/10571414" class="side_link"></a>
+        <p class="side_close" id="sideClose"></p>
+    </div>
+
+    <div id="top">
+        <div class="top_in">
+            <p class="mo_btn_menu" id="btnMenu"></p>
+
+            <a href="/DK_MAIN" class="dk_logo">DK로고</a>
+
+            <ul class="gnb">
+                <li class="gnb01 current">메인</li>
+                <li class="gnb02">사전예약</li>
+                <li class="gnb03">이벤트</li>
+                <li class="gnb04">파트너 크리에이터</li>
+                <li class="gnb05">서버 특징</li>
+            </ul>
+
+            <a href="/DK_MAIN" class="btn_home">홈페이지 가기</a>
+            <a href="/DK_MAIN" id="btnClose" class="btn_close">오늘 하루 보지 않기</a>
+        </div>
+    </div>
+
+    <div id="sidebar">
+        <div class="btn_menu_close" id="btnMenuClose"></div>
+
+        <a href="/DK_MAIN" class="dk_logo"></a>
+        
+        <ul>
+            <li class="menu01 current">메인</li>
+            <li class="menu02">사전예약</li>
+            <li class="menu03">SNS공유 이벤트</li>
+        </ul>
+
+        <a href="/DK_MAIN" class="menu_link">공식 홈페이지 바로가기</a>
+    </div>
+
+    <section id="event00">
+        <div class="intro_bg intro_bg01"></div>
+        <div class="intro_bg intro_bg02"></div>
+        <div class="intro_bg intro_bg03"></div>
+        <div class="intro_bg intro_bg04"></div>
+
+        <div class="intro_ttl">녹스</div>
+
+        <div class="intro_btn" id="btnIntro">사전예약바로가기</div>
+
+        <div id="particles-left"></div> 
+        <div id="particles-right"></div> 
+    </section>
+
+    <section id="event01">
+        <h2>녹스 서버 사전예약</h2>
+
+        <div class="item_box">
+            <div class="item_img">
+                <div class="icon_plus" id="btnItem">
+                    <p class="item_popup"></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="mustache_res_box"></div>
+        <script type="text/x-mustache" id="template_res_box">
+            <div class="res_box">
+                <ul>
+                    <li class="input_box">
+                        <input id="resInput" class="textbox" type="number" name='phoneNum' placeholder="'ㅡ'를 제외한 숫자만 입력해주세요." maxlength="11" oninput="jQuery.numberMaxLength(this);" autocomplete="off"/>
+                    </li>
+                    <li class="checkbox">
+                        <input type="checkbox" name="accept_agreement1" id="check1" />
+                        <label for="check1">(필수) 개인 정보 수집 및 이용 동의</label>
+                    </li>
+                </ul>
+
+                <p  id="btnInfo" class="btn_info">전문보기</p>
+
+                <button id="btnRes" type="button" class="btn_res">사전예약</button>
+            </div>
+        </script>
+
+        <div class="cont01_notice">
+            <div class="btn_notice" id="btnRseNotice">사전예약 주의사항</div>
+        </div>
+
+        <div id="mustache_coupon_box"></div>
+        <script type="text/x-mustache" id="template_coupon_box">
+            <div class="res_box">
+                <ul>
+                    <li class="input_box">
+                        <input id="couponInput" class="textbox" type="text" name='couponCode' placeholder="쿠폰번호를 입력해주세요." maxlength="20" autocomplete="off"/>
+                    </li>
+                </ul>
+
+                <button id="btnCoupon" type="button" class="btn_coupon">사전예약</button>
+            </div>
+        </script>
+    </section>
+
+    <section id="event02">
+        <h2>녹스 서버 오픈 공유 이벤트</h2>
+
+        <div class="content_box">
+            <div class="cont01">
+                <div class="btn_box">
+                    <a href="/_WebEvent/DK/2024/new_server_0125/images/download.jpg" class="btn_image" download="DK 녹스 신서버 이미지">서버 홍보 이미지 다운로드</a>
+                    <p id="btnCopy" class="btn_copy">서버 오픈 홍보글 복사</p>
+                </div>
+            </div>
+            <div class="cont02"></div>
+        </div>
+
+        <div class="cont02_notice">
+            <div class="btn_notice" id="btnSns">SNS 공유 이벤트 주의사항</div>
+        </div>
+    </section>
+
+    <section id="event03">
+        <h2>2024 녹스 서버 파트너 크리에이터즈</h2>
+
+        <div class="cont03_text"></div>
+
+        <div class="cont03_step">진행방법</div>
+
+        <a class="btn_creaters" href="https://forms.gle/hBXw6TwFAMMXgAHd9" target="_blank">파트너 크리에이터즈 지원하기</a>
+
+        <div class="cont03_notice">
+            <div class="btn_notice" id="btnCreators">파트너 크리에이터즈 주의사항</div>
+        </div>
+    </section>
+
+    <section id="event04">
+        <h2>DK 온라인 서버 특징</h2>
+
+        <div class="cont04_text"></div>
+
+        <div class="cont04_step">
+            <a class="btn_phone" href="https://www.masangsoft.com/?mid=NCS_SECURITY_PHONEAUTH" target="_blank">전화인증 등록하기</a>
+        </div>
+    </section>
+
+    <p class="btn_top" id="btnTop"></p>
+
+    <p id="popupBackBlack" class="popup_back popup_back_black"></p>
+    <p id="popupBackWhite" class="popup_back popup_back_white"></p>
+
+    <div class="common_popup">
+        <div id="popupError" class="popup popup_error">
+            <p id="popupTitleError" class="popup_title"></p>
+            <p id="popupClose" class="popup_close_defalut popup_close">확인</p>
+        </div>
+    </div>
+
+    <div class="common_popup">
+        <div id="popupConfirm" class="popup popup_confirm">
+            <p id="popupTitleConfirm" class="popup_title"></p>
+            <p data-action="ok" id="popupConfirmClose" class="popup_confirm_close">네</p>
+            <p data-action="cancel" id="popupConfirmCancel" class="popup_confirm_cancel">아니오</p>
+        </div>
+    </div>
+
+    <div class="common_popup">
+        <div id="popupSuccess" class="popup popup_success">
+            <p id="btnShort" class="btn_short">이벤트 바로가기</p>
+            <p id="popupIconClose" class="popup_icon_close"></p>
+        </div>
+    </div>
+
+    <div class="common_popup">
+        <div id="popupResInfo" class="popup popup_res_info">
+            <p id="popupIconClose" class="popup_icon_close"></p>
+            <p id="popupClose" class="popup_close">닫기</p>
+        </div>
+    </div>
+
+    <div class="common_popup">
+        <div id="popupResNotice" class="popup popup_res">
+            <p id="popupIconClose" class="popup_icon_close"></p>
+            <p id="popupClose" class="popup_close">닫기</p>
+        </div>
+    </div>
+
+    <div class="common_popup">
+        <div id="popupSns" class="popup popup_sns">
+            <p id="popupIconClose" class="popup_icon_close"></p>
+            <p id="popupClose" class="popup_close">닫기</p>
+        </div>
+    </div>
+
+    <div class="common_popup">
+        <div id="popupCreators" class="popup popup_creators">
+            <p id="popupClose" class="popup_close">닫기</p>
+        </div>
+    </div>
+
+    <div class="common_popup">
+        <div id="popupCreators" class="popup popup_creators">
+            <p id="popupClose" class="popup_close">닫기</p>
+        </div>
+    </div>
+
+    <div class="common_popup">
+        <div id="popupItem" class="popup popup_item">
+            <p id="popupIconClose" class="popup_icon_close"></p>
+            <p id="popupClose" class="popup_close">닫기</p>
+        </div>
+    </div>
+</div>

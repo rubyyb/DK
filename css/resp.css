@@ -1,0 +1,481 @@
+@media screen and (max-width: 720px) {
+    #top {
+        height: 160px;
+    }
+
+    #top p.mo_btn_menu {
+        display: block !important;
+        position: absolute;
+        top: 50px;
+        left: 0;
+        width: 88px;
+        height: 60px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_btn_menu.png') no-repeat;
+        background-size: cover;
+    }
+
+    #top a.dk_logo {
+        top: 55px !important;
+        left: 144px !important;
+        width: 340px !important;
+        height: 70px !important;
+        background-size: cover !important;
+    }
+
+    #top a.btn_home {
+        top: 40px !important;
+        right: 0 !important;
+        width: 86px !important;
+        height: 78px !important;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_btn_home.png') no-repeat !important;
+        background-size: cover !important;
+    }
+
+    #top a.btn_close {
+        display: none !important;
+    }
+
+    #top div.top_in ul.gnb {
+        display: none;
+    }
+
+    #sidebar {
+        display: none;
+        height: 100%;
+        width: 85%;
+        position: fixed;
+        left: 0;
+        z-index: 999;
+        background: #000000;
+        overflow-x: hidden;
+    }
+
+    #sidebar .dk_logo {
+        position: absolute;
+        top: 55px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        width: 340px;
+        height: 70px;
+        background-size: cover;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/dk_logo.png') no-repeat;
+        background-size: cover;
+    }
+
+    #sidebar ul {
+        position: absolute;
+        top: 300px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    #sidebar ul li {
+        padding: 8px;
+        margin: 140px 0;
+        font-size: 54px;
+        color: #d9d9d9;
+        letter-spacing: -1.4px;
+    }
+
+    #sidebar ul li.current {
+        color: #6792ff;
+    }
+
+    #sidebar.active {
+        display: block;
+    }
+
+    #sidebar .mo_btn_menu {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        cursor: pointer;
+        font-size: 24px;
+        color: white;
+    }
+
+    #sidebar.active .mo_btn_menu {
+        left: 250px;
+    }
+
+    #sidebar .btn_menu_close {
+        position: absolute;
+        top: 28px;
+        left: 48px;
+        width: 96px;
+        height: 96px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_menu_close.png') no-repeat;
+        background-size: cover;
+    }
+
+    #sidebar .menu_link {
+        position: absolute;
+        top: 1164px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        width: 94%;
+        height: 140px;
+        font-size: 48px;
+        background: #444e8b;
+        color: #fff;
+        text-align: center;
+        line-height: 140px;
+        border-radius: 10px;
+        letter-spacing: -1.6px;
+    }
+
+    /*intro*/
+    #event00 {
+        height: 2560px;
+    }
+
+    #event00 div.intro_bg01 {
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_intro_bg_02.jpg') center 0 no-repeat !important;
+        height: 2560px;
+        background-size: cover !important;
+    }
+
+    #particles-left,
+    #particles-right {
+        display: none;
+    }
+
+    #event00 div.intro_bg02,
+    #event00 div.intro_bg03,
+    #event00 div.intro_bg04 {
+        display: none;
+    }
+
+    #event00 div.intro_ttl {
+        top: 1480px;
+        width: 944px;
+        height: 578px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_intro_ttl.png') -4px 0 no-repeat !important;
+        background-size: cover !important;
+    }
+
+    #event00 div.intro_btn {
+        top: 2020px;
+        width: 762px;
+        height: 240px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_intro_bg.png') 4px 0 no-repeat !important;
+        background-size: cover !important;
+    }
+
+    /*content*/
+    #event01 {
+        height: 2140px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_cont01_bg_3.jpg') center 0 no-repeat !important;
+        background-size: cover !important;
+    }
+
+    #event01 h2 {
+        width: 1180px;
+        height: 726px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_cont01_ttl02.png') no-repeat !important;
+        background-size: cover !important;
+    }
+
+    #event01 div.item_box {
+        top: 916px;
+        width: 478px;
+    }
+
+    #event01 div.item_box div.item_img {
+        width: 478px;
+        height: 396px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_cont01_itme_img.png') no-repeat !important;
+        background-size: cover !important;
+    }
+
+    #event01 div.item_box div.item_img div.icon_plus {
+        top: 28px;
+        right: 82px;
+        width: 72px;
+        height: 72px;
+    }
+
+    #event01 div.res_box {
+        top: 1375px;
+        width: 1152px;
+    }
+
+    #event01 li.input_box {
+        width: 1152px;
+        height: 140px;
+        background: none;
+    }
+
+    #event01 input#resInput {
+        width: 1152px;
+        height: 140px;
+        font-size: 40px;
+    }
+
+    #event01 input#resInput::placeholder {
+        font-size: 40px;
+    }
+
+    #event01 div.res_box ul li.checkbox input[id="check1"]+label {
+        top: 172px;
+        margin-left: -575px;
+        width: 48px;
+        height: 48px;
+        font-size: 0;
+        background-size: cover !important;
+    }
+
+    #event01 p.btn_info {
+        top: 170px;
+        left: 465px;
+        width: 170px;
+        height: 50px;
+        background-size: cover !important;
+    }
+
+    #event01 div.cont01_notice {
+        top: 1710px;
+        width: 1180px;
+        height: 170px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_cont_notice.png') no-repeat !important;
+        background-size: cover !important;
+    }
+
+    #event01 div.cont01_notice div.btn_notice {
+        width: 418px;
+        height: 104px;
+    }
+
+    #event01 button.btn_res {
+        left: 50%;
+        margin-left: -720px;
+        top: 608px;
+        z-index: 5;
+        width: 1440px;
+        height: 220px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_btn_res02.png') center 0 no-repeat !important;
+        background-size: cover !important;
+    }
+
+    #event01 button.btn_res.active {
+        position: fixed;
+        bottom: 0 !important;
+        top: unset;
+        z-index: 9;
+    }
+
+    #event02 {
+        height: 3322px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_cont02_bg_2.jpg') center 0 no-repeat !important;
+        background-size: cover !important;
+    }
+
+    #event02 h2 {
+        top: 170px;
+        width: 1060px;
+        height: 674px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_cont02_ttl02.png') no-repeat !important;
+        background-size: cover !important;
+    }
+
+    #event02 div.content_box {
+        position: unset;
+    }
+
+    #event02 div.content_box div.cont01 {
+        top: 910px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        width: 1254px;
+        height: 952px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_cont02_box01_02.png') no-repeat !important;
+        background-size: cover !important;
+    }
+
+    #event02 div.content_box div.cont01 div.btn_box {
+        top: 395px;
+        width: 924px;
+        height: 152px;
+        background-size: cover !important;
+    }
+
+    #event02 div.content_box div.cont01 div.btn_box a,
+    #event02 div.content_box div.cont01 div.btn_box p {
+        width: 448px;
+        height: 144px;
+    }
+
+    #event02 div.content_box div.cont02 {
+        top: 1880px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        width: 1254px;
+        height: 952px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_cont02_box02.png') no-repeat !important;
+        background-size: cover !important;
+    }
+
+    #event02 div.cont02_notice {
+        top: 2960px;
+        width: 484px;
+    }
+
+    #event02 div.cont02_notice div.btn_notice {
+        width: 484px;
+        height: 104px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_cont02_notice.png') no-repeat !important;
+        background-size: cover !important;
+    }
+
+    #event03, #event04 {
+        display: none;
+    }
+
+    p.btn_top {
+        display: none;
+        position: fixed;
+        right: 20px;
+        bottom: 250px;
+        width: 104px;
+        height: 88px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_btn_top.png') no-repeat;
+        background-size: cover;
+    }
+
+    /*popup*/
+    .popup_back {
+	    background: #000;
+    }
+
+    .popup_back_white {
+        background: #fff;
+    }
+    
+    .popup_success {
+        top: 60px;
+        margin-top: 0;
+        width: 1200px;
+        height: 847px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_popup_complete.png') no-repeat !important;
+        background-size: cover !important;
+    }
+
+    .popup_success .btn_short {
+        top: 566px;
+        margin-left: -200px;
+        width: 398px;
+        height: 100px;
+    }
+
+    .popup_success .popup_icon_close {
+        top: 35px;
+        right: 35px;
+        width: 50px;
+        height: 50px;
+    }
+
+    .popup_item {
+        display: none;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        width: 1200px;
+        height: 1207px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_cont01_popup.png') center 0 no-repeat;
+        background-size: cover;
+    }
+
+    .popup_item .popup_close {
+        bottom: 96px;
+        width: 345px;
+        height: 102px;
+    }
+
+    .popup_item .popup_icon_close {
+        position: absolute;
+        top: 35px;
+        right: 35px;
+        width: 50px;
+        height: 50px;
+    }
+
+    .popup_error, .popup_confirm {
+        top: 60px;
+        width: 1128px;
+        height: 416px;
+        margin-left: -564px;
+        margin-top: 0;
+    }
+
+    .popup .popup_title {
+        margin-top: 108px;
+        font-size: 40px;
+    }
+
+    .popup .popup_confirm_close {
+        margin-left: -206px;
+    }
+
+    .popup .popup_confirm_close,
+    .popup .popup_confirm_cancel,
+    .popup .popup_close_defalut {
+        width: 200px;
+        height: 96px;
+        font-size: 30px;
+        line-height: 96px;
+        border-radius: 10px;
+    }
+
+    .popup_res_info {
+        top: 0;
+        margin-top: 0;
+        width: 100%;
+        height: 1010px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_popup_res.png') center 0 no-repeat;
+        background-size: cover;
+    }
+
+    .popup_res_info .popup_close,
+    .popup_res .popup_close,
+    .popup_sns .popup_close {
+        bottom: 0;
+        width: 338px;
+        height: 100px;
+    }
+
+    .popup_res_info .popup_icon_close,
+    .popup_res .popup_icon_close,
+    .popup_sns .popup_icon_close {
+        position: absolute;
+        top: 44px;
+        right: 44px;
+        width: 50px;
+        height: 50px;
+    }
+
+    .popup_res {
+        top: 0;
+        margin-top: 0;
+        width: 100%;
+        height: 1160px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_popup_res02.png') center 0 no-repeat;
+        background-size: cover;
+    }
+
+    .popup_sns {
+        top: 0;
+        margin-top: 0;
+        width: 100%;
+        height: 811px;
+        background: url('https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/mo_popup_sns.png') center 0 no-repeat;
+        background-size: cover;
+    }
+}

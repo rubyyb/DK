@@ -1,0 +1,788 @@
+<script>
+    var objUserInfo = {};
+    var objEventState = {};
+
+    var isAjax = 'N';
+
+
+    // 유입경로 확인 값과 쿠키에 유입경로가 없다면 추적된 유입 경로를 쿠키에 저장
+    var strPlatform = eventInfo.utmSource;
+    if (!strPlatform) {
+        var cookiePlatform = jQuery.cookie('platform_dk');
+        if (!cookiePlatform) {
+            var strHttpReferer = encodeURI(document.referrer);
+            var advPlatformStr = /(naver|daum|inven|google|afreecatv|facebook|instagram|youtube|lms|SNS)/gi;
+            var matchPlatform = strHttpReferer.match(advPlatformStr);
+            if (matchPlatform) {
+                strPlatform = matchPlatform[0];
+            } else {
+                strPlatform = 'masang';
+            }
+        } else {
+            strPlatform = cookiePlatform;
+        }
+    }
+    jQuery.cookie('platform_dk', strPlatform, {
+        path: '/'
+    });
+    // 여기까지 유입경로 확인 값 ~
+
+
+    // 스크립트 진행
+    jQuery(document).ready(function(){
+        dispTamplate({
+            route: 'advReservation'
+        }, objEventState);
+
+        dispTamplate({
+            route: 'coupon'
+        }, objEventState);
+
+        // 이벤트 상태를 파악해서 가져오기 위한 요청 파라미터 설정
+        // 함수를 통해 해당 파라미터를 사용하여 이벤트 상태 데이터 가져오는 작업 수행
+        var oParamEventState = getParams('load', 'eventStatus', objEventState);
+        getListData(oParamEventState); 
+
+        // API 관련 설정
+        // 이 페이지에 들어가야할 API는
+        // 로그인 정보, 사전예약 휴대폰 값 입력, 캐릭터 정보(?), 이벤트 상태
+        function getParams(paramEvent, paramType = 'error', params = {}) {
+            var objResult = {};
+            var strCsrf = jQuery("#event_info").data("csrf");
+            if (paramType == 'userInfo' && params.memberSrl) {
+                objResult = {
+                    route: "userInfo",
+                    type: "POST",
+                    url: "/WEB_EVENT_API/user/info",
+                    data: {
+                        method: "POST",
+                        csrf: strCsrf,
+                        memberSrl: params.memberSrl,
+                    }
+                }
+            } else if (paramType == 'eventStatus') {
+                objResult = {
+                    route: "eventStatus",
+                    type: "GET",
+                    url: "/WEB_EVENT_API/dk/pre-app/20240125/check",
+                    data: {
+                        csrf: strCsrf,
+                    }
+                }
+            } else if (paramType == 'advReservation' && params.phoneNum) {
+                // 사전예약
+                objResult = {
+                    route: "advReservation",
+                    type: "POST",
+                    url: "/WEB_EVENT_API/dk/pre-app/20240725/app",
+                    data: {
+                        csrf: strCsrf,
+                        phoneNum: params.phoneNum,
+                        referrer: params.referrer,
+                    }
+                }
+            } else if (paramType == 'coupon' && params.couponNumber) {
+                // 예빈 입력(해보면 좋을 것 같아서)
+                // 쿠폰 정보 확인
+                objResult = {
+                    route: "coupon",
+                    type: "GET",
+                    url: "/WEB_EVENT_API/dk/coupon/check",
+                    data: {
+                        csrf: strCsrf,
+                        couponNumber: params.couponNumber
+                    }
+                }
+            }
+
+            return objResult;
+        }
+
+        function dispTamplate(params, lodashData) {
+            if (!lodashData || !params.route) {
+                return false;
+            }
+
+            if (params.route == 'advReservation') {
+                var templateResBox = jQuery('#template_res_box').html();
+                var htmlResBox = Mustache.render(templateResBox, lodashData);
+                jQuery('#mustache_res_box').html(htmlResBox);
+            } else if (params.route == 'coupon') {
+                // 예빈추가
+                var templateCouponBox = jQuery('#template_coupon_box').html();
+                var htmlCouponBox = Mustache.render(templateCouponBox, lodashData);
+                jQuery('#mustache_coupon_box').html(htmlCouponBox);
+            }
+        }
+
+        console.log('장형사 어깨가 무거워!')
+
+        function getListData(params) {
+            if (!params.route) {
+                displayError('라우트 정보가 없습니다. 요청을 제한합니다.');
+                return false;
+            }
+
+            if (isAjax == 'Y') {
+                displayError('ajax 사용중입니다. 요청을 제한합니다. (' + params.route + ')');
+                return false;
+            }
+
+            if (
+                params.route == 'userInfo' && params.route == 'eventStatus' && params.route == 'advReservation' && params.route == 'coupon'
+            ) {
+                isAjax = 'Y';
+            }
+
+            var strType = params.type;
+            var strUrl = params.url;
+            var strRoute = params.route;
+            var objData = params.data;
+
+            if (!strType || !strUrl || !objData || !strRoute) {
+                displayError('잘못된 접근입니다. 요청을 제한합니다.');
+                return false;
+                
+            }
+
+            jQuery.ajax({
+                type: strType,
+                url: strUrl,
+                data: objData,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("csrf", objData.csrf);
+                },
+                success: function(res) {
+                    isAjax = 'N';
+                    var jsonData;
+
+                    if (typeof res == 'string') {
+                        jsonData = JSON.parse(res);
+                    } else {
+                        jsonData = res;
+                    }
+
+                    if (jsonData.csrf) {
+                        jQuery("#event_info").data("csrf", jsonData.csrf);
+                    }
+
+                    if (strRoute == 'userInfo' && jsonData.code == '200') {
+                        objUserInfo = jsonData.data;
+                    } else if (strRoute == 'eventStatus' && jsonData.code == '200') {
+                        objEventState = jsonData.data;
+                            
+                        // 여기를 수정하면 자연스럽게 바뀌는게 가능할지도
+                        // 이벤트 상태에 따라서 템플릿이 바뀌는 것
+                        // 진행전이 존재하지 않음
+                        if (/* objEventState.event_status == '1' || */ objEventState.event_status == '2') {
+                            // 휴대폰 번호 입력 폼이 떠야 하는 경우
+                            dispTamplate({
+                                route: 'advReservation'
+                            }, objEventState);
+                        }
+                        else if (objEventState.event_status == '3') {
+                        // 쿠폰 번호 입력창이 떠야하는 구간
+                            dispTamplate({
+                                route: 'coupon'
+                            }, objEventState);
+                        } else if (objEventState.event_status == '4') {
+                            // 여긴 있어야 하지만 작업 중 꺼지는 현상으로 주석처리 해둠
+                            // var link = '/DK_MAIN';
+                            // location.href = link;
+                        }
+                    } else if (strRoute == 'advReservation' && jsonData.code == '200') {
+                        var elBtnShort = jQuery("#btnShort");
+                        var elBody = jQuery("body");
+
+                        elPopupSuccess.show();
+
+                        elBtnShort.on('click', function() {
+                            if (jQuery(window).width() < 768) {
+                                jQuery("html, body").animate({
+                                    scrollTop: 4800
+                                }, 300);
+                            } else {
+                                jQuery("html, body").animate({
+                                    scrollTop: 2100
+                                }, 300);
+                            }
+
+                            elPopupSuccess.hide();
+                            elPopupBackBlack.hide();
+                            elBody.removeClass('overflow');
+                        });
+
+                        dispTamplate({
+                            route: 'advReservation'
+                        }, {});
+                    }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    isAjax = 'N';
+                    displayAlert(XMLHttpRequest.responseJSON.message);
+                },
+                complete: function(XMLHttpRequest, textStatus) {
+                    isAjax = 'N';
+                }
+            })
+            console.log('쥑이네 마형사! 가자!');
+            return true;
+        }
+
+        console.log('그래서 짭새야?! 쥑이네!');
+
+        var elBtnIntro = jQuery("#btnIntro");
+
+        elBtnIntro.on('click', function() {
+            if (jQuery(window).width() < 768) {
+                jQuery("html, body").animate({
+                    scrollTop: 2200
+                }, 300);
+            } else {
+                jQuery("html, body").animate({
+                    scrollTop: 1100
+                }, 300);
+            }
+
+            elPopupSuccess.hide();
+            elPopupBackBlack.hide();
+        });
+
+        var popupTitleError = jQuery("#popupTitleError");
+        var popupTitleConfirm = jQuery("#popupTitleConfirm");
+        var elPopupBackBlack = jQuery("#popupBackBlack");
+        var elPopupBackWhite = jQuery("#popupBackWhite");
+        var elPopupError = jQuery("#popupError");
+        var elPopupConfirm = jQuery("#popupConfirm");
+        var elPopupClose = jQuery(".popup_close");
+        var elBody = jQuery("body");
+
+        var elPopupResInfo = jQuery("#popupResInfo");
+        var elPopupResNotice = jQuery("#popupResNotice");
+        var elPopupCreators = jQuery("#popupCreators");
+        var elPopupSns = jQuery("#popupSns");
+        var elPopupSuccess = jQuery("#popupSuccess");
+        var elPopupItem = jQuery("#popupItem");
+
+        var elSideBanner = jQuery("#sideBanner");
+        var elSideClose = jQuery("#sideClose");
+
+        elSideClose.on("click", function() {
+            elSideBanner.hide();  
+        })
+
+        function displayConfirm(strTitle) {
+            if (!strTitle) {
+                return false;
+            }
+            popupTitleConfirm.text(strTitle);
+            elPopupBackBlack.show();
+            elPopupConfirm.show();
+            elBody.addClass('overflow');
+            return true;
+        } 
+        
+        var elConfirmBtn = jQuery('#popupConfirmClose, #popupConfirmCancel');
+        var elConfirmBtnCancel = jQuery('#popupConfirmCancel');
+        elConfirmBtn.on('click', function() {
+            elPopupConfirm.hide();
+            if (jQuery(this).data('action') == 'ok') {
+                funcConfirm();
+            }
+        });
+
+        elConfirmBtnCancel.on('click', function() {
+            elPopupBackBlack.hide();
+            elPopupConfirm.hide();
+            elBody.removeClass('overflow');
+        });
+
+        function displayAlert(strTitle) {
+            if (!strTitle) {
+                return false;
+            }
+            popupTitleError.text(strTitle);
+            elPopupBackBlack.show();
+            elPopupError.show();
+            elBody.addClass('overflow');
+            return true;
+        }
+
+        function displayError(msg) {
+            if (!msg) {
+                return false;
+            }
+            if (pageEnv == 'test') {
+                console.error(msg);
+            }
+            return false;
+        }
+
+        elPopupClose.on('click', function() {
+            elPopupBackBlack.hide();
+            elPopupBackWhite.hide();
+            elPopupError.hide();
+            elPopupResInfo.hide();
+            elPopupResNotice.hide();
+            elPopupCreators.hide();
+            elPopupSns.hide();
+            elPopupItem.hide();
+            elBody.removeClass('overflow');
+        });
+
+        var elBtnRseNotice = jQuery("#btnRseNotice");
+        var elBtnCreators = jQuery("#btnCreators");
+        var elBtnSns = jQuery("#btnSns");
+        var elPopupIconClose = jQuery(".popup_icon_close");
+        var elBtnItem = jQuery("#btnItem");
+
+        elPopupIconClose.on('click', function(){
+            elPopupBackBlack.hide();
+            elPopupBackWhite.hide();
+            elPopupSuccess.hide();
+            elPopupItem.hide();
+            elPopupResInfo.hide();
+            elPopupResNotice.hide();
+            elPopupSns.hide();
+            elBody.removeClass('overflow');
+        });
+
+        if (jQuery(window).width() < 768) { 
+            jQuery(document).on('click', '#btnInfo', function(){  
+                elPopupBackWhite.show();
+                elPopupResInfo.show();
+                elBody.addClass('overflow');
+            });
+        } else {
+            jQuery(document).on('click', '#btnInfo', function(){  
+                elPopupBackBlack.show();
+                elPopupResInfo.show();
+                elBody.addClass('overflow');
+            });
+        }
+
+        if (jQuery(window).width() < 768) { 
+            elBtnRseNotice.on('click', function(){
+                elPopupBackWhite.show();
+                elPopupResNotice.show();
+                elBody.addClass('overflow');
+            });
+        } else {
+            elBtnRseNotice.on('click', function(){
+                elPopupBackBlack.show();
+                elPopupResNotice.show();
+                elBody.addClass('overflow');
+            });
+        }
+
+        if (jQuery(window).width() < 768) {
+            elBtnItem.on('click', function(){
+                elPopupBackBlack.show();
+                elPopupItem.show();
+                elBody.addClass('overflow');
+            });
+
+            jQuery(".item_popup").hide();
+        }
+
+        elBtnCreators.on('click', function(){
+            elPopupBackBlack.show();
+            elPopupCreators.show();
+            elBody.addClass('overflow');
+        });
+        
+        if (jQuery(window).width() < 768) { 
+            elBtnSns.on('click', function(){
+                elPopupBackWhite.show();
+                elPopupSns.show();
+                elBody.addClass('overflow');
+            });
+        } else {
+            elBtnSns.on('click', function(){
+                elPopupBackBlack.show();
+                elPopupSns.show();
+                elBody.addClass('overflow');
+            });
+        }
+
+        jQuery.numberMaxLength = function(e) {
+            if (e.value.length > e.maxLength) {
+                e.value = e.value.slice(0, e.maxLength);
+            }
+        }
+
+        function isNum(param) {
+            if (typeof param !== 'string') {
+                return false;
+            }
+            param = param.trim();
+            if (param === '' || isNaN(param)) {
+                return false;
+            }
+            return true;
+        }
+
+        jQuery(document).on('keypress', '#resInput', function(event) {
+            var keyCode = event.which;
+            if ((keyCode < 48 || keyCode > 57) && (keyCode !== 8) && (keyCode !== 13) && (keyCode < 37 || keyCode > 40)) {
+                event.preventDefault();
+            }
+        });
+
+        // 사전 예약 시 팝업창 뜨도록
+        jQuery(document).on('click', '#btnRes', function() {
+            var elInputVal = jQuery('#resInput').val();
+            var elCheck = jQuery('#check1').is(':checked');
+            var tmpConfirmMsg = '';
+            tmpConfirmMsg = "정말 이 전화번호로 신청하시겠습니까?";
+
+            if (jQuery(window).width() < 768) {
+                if (!isNum(elInputVal) && !elCheck) {
+                    jQuery("html, body").animate({
+                        scrollTop: 2200
+                    }, 300);
+                } else if (!isNum(elInputVal)) {
+                    displayAlert('휴대폰 번호를 제대로 입력해주세요.');
+                    return false;
+                } else if (!elCheck) {
+                    displayAlert('개인정보 수집 및 이용 동의버튼을 눌러주세요.');
+                    return false;
+                } else {
+                    var oParamAdvRes = getParams("click", "advReservation", {
+                        phoneNum: elInputVal,
+                        referrer: encodeURI(document.referrer),
+                    });
+
+                    funcConfirm = function() {
+                        getListData(oParamAdvRes);
+                    };
+                    displayConfirm(tmpConfirmMsg);
+                }
+            } else {
+                if (!isNum(elInputVal)) {
+                    displayAlert('휴대폰 번호를 입력해주세요.');
+                    return false;
+                }
+
+                if (!elCheck) {
+                    displayAlert('개인정보 수집 및 이용 동의버튼을 눌러주세요.');
+                    return false;
+                }
+
+                var oParamAdvRes = getParams("click", "advReservation", {
+                    phoneNum: elInputVal,
+                    referrer: encodeURI(document.referrer),
+                });
+
+                funcConfirm = function() {
+                    getListData(oParamAdvRes);
+                };
+                displayConfirm(tmpConfirmMsg);
+            }
+        });
+
+        // 쿠폰 입력시 팝업창 뜨도록
+        jQuery(document).on('click', '#btnCoupon', function() {
+            var couponInputVal = jQuery('#couponInput').val();
+            // var elCheck = jQuery('#check1').is(':checked'); -> 개인정보 수집 동의 인풋 박스
+            // var tmpConfirmMsg = '';
+            // tmpConfirmMsg = "정말 이 전화번호로 신청하시겠습니까?";
+
+            if (jQuery(window).width() < 768) {
+                if (!isNum(couponInputVal)) {
+                    jQuery("html, body").animate({
+                        scrollTop: 2200
+                    }, 300);
+                } else if (userInfo.is_login == 'N') {
+                    displayAlert('로그인 후 입력이 가능합니다.');
+                    return false;
+                }  else if (!isNum(couponInputVal)) {
+                    displayAlert('쿠폰 번호를 정확하게 입력해주세요.');
+                    return false;
+                }  else {
+                    var oParamAdvCoupon = getParams("click", "coupon", {
+                        couponNumber: couponInputVal,
+                        referrer: encodeURI(document.referrer),
+                    });
+
+                    funcConfirm = function() {
+                        getListData(oParamAdvCoupon);
+                    };
+                    // displayConfirm(tmpConfirmMsg);
+                }
+            } else {
+                if (userInfo.is_login == 'N') {
+                    displayAlert('로그인 후 입력이 가능합니다.');
+                    return false;
+                }
+
+                else if (!isNum(couponInputVal)) {
+                    displayAlert('쿠폰 번호를 정확하게 입력해주세요.');
+                    return false;
+                }
+
+                var oParamAdvCoupon = getParams("click", "coupon", {
+                    couponNumber: couponInputVal,
+                    referrer: encodeURI(document.referrer),
+                });
+
+                funcConfirm = function() {
+                    getListData(oParamAdvCoupon);
+                };
+                // displayConfirm(tmpConfirmMsg);
+            }
+        });
+
+        // 모바일에서 active 가 붙으면 버튼이 생기도록
+        jQuery(window).scroll(function() {
+            if (jQuery(this).scrollTop() > 1900) {         
+                if (jQuery(window).width() < 768) { 
+                    jQuery(".btn_res").addClass('active');
+                }
+            } else {
+                jQuery(".btn_res").removeClass('active');
+            }
+        });
+
+        // 이벤트 중 홍보글 복사 관련 스크립트
+        jQuery("#btnCopy").on("click", function() {
+            var tempElem = jQuery("<textarea>");
+            tempElem.val('●DK온라인 녹스서버 사전예약 오픈● \n #2024 신서버 사전예약 특별보상 100% 지급! \n 사전예약 신청 https://bit.ly/3vY4hg9 \n ★ 9검 6셋장비 세트 100% 지급 ★ \n ▶ 사전예약 기간 : ~2/26 \n ▶ 신서버 오픈 : 2/26 오후 8시 \n \n #DK온라인 #녹스서버 #MMORPG #사전예약 #이벤트 #신서버');
+            jQuery("body").append(tempElem);
+
+            tempElem.select();
+            document.execCommand("copy");
+            tempElem.remove();
+
+            displayAlert('복사되었습니다.');
+        });
+
+        function scrollToSection(selector, offset) {
+            jQuery(selector).on('click', 'li', function() {
+                var index = jQuery(this).index();
+                var sectionID = '#event' + (index < 10 ? '0' + index : index);
+                var offsetTop = jQuery(sectionID).offset().top + 40;
+                jQuery('.gnb li, #sidebar ul li').removeClass('current');
+                jQuery(this).addClass('current');
+                jQuery('html, body').animate({scrollTop: offsetTop}, 500);
+            });
+        }
+
+        scrollToSection('.gnb', 80);
+        scrollToSection('#sidebar', 160);
+
+        jQuery(window).scroll(function(){
+            var scrollTop = jQuery(this).scrollTop();
+
+            if (jQuery(window).width() < 768) {
+                handleScroll(scrollTop, [
+                    { range: [0, 2220], selector: '#sidebar ul li.menu01' },
+                    { range: [2220, 4420], selector: '#sidebar ul li.menu02' },
+                    { range: [4420, 7642], selector: '#sidebar ul li.menu03' }
+                ]);
+            } else {
+                handleScroll(scrollTop, [
+                    { range: [0, 970], selector: '.gnb li.gnb01' },
+                    { range: [970, 1930], selector: '.gnb li.gnb02' },
+                    { range: [1930, 2890], selector: '.gnb li.gnb03' },
+                    { range: [2890, 3951], selector: '.gnb li.gnb04' },
+                    { range: [3951, 5080], selector: '.gnb li.gnb05' }
+                ]);
+            }
+        });
+
+        function handleScroll(scrollTop, ranges) {
+            for (var i = 0; i < ranges.length; i++) {
+                var range = ranges[i];
+                if (scrollTop >= range.range[0] && scrollTop < range.range[1]) {
+                    jQuery(range.selector).addClass('current').siblings().removeClass('current');
+                    break;
+                }
+            }
+        }
+
+        var elBtnTop = jQuery("#btnTop");
+
+        elBtnTop.on('click', function() {
+            jQuery("html, body").animate({
+                scrollTop: 0
+            }, 300);
+        });
+
+        jQuery(window).scroll(function() {
+            if (jQuery(this).scrollTop() > 900) {
+                elBtnTop.fadeIn();
+            } else {
+                elBtnTop.fadeOut();
+            }
+        });
+
+        var elBtnMenu = jQuery(".mo_btn_menu");
+        var elMeueLi = jQuery("#sidebar ul li");
+        var elSidebar = jQuery("#sidebar");
+        var elbtnMenuClose = jQuery(".btn_menu_close");
+        
+        elBtnMenu.on('click', function() {
+            elSidebar.toggleClass('active');
+            elPopupBackBlack.css("opacity", 0.6);
+            elPopupBackBlack.show();
+
+            jQuery('body').css('overflow', 'hidden');
+        });
+
+        elbtnMenuClose.on('click', function() {
+            elSidebar.removeClass('active');
+            elPopupBackBlack.hide();
+
+            jQuery('body').css('overflow', 'auto');
+        });
+
+        elMeueLi.on('click', function(){
+            elSidebar.removeClass('active');
+            elPopupBackBlack.hide();
+
+            jQuery('body').css('overflow', 'auto');
+        });
+
+        particlesJS("particles-left", {
+            "particles": {
+                "number": {
+                    "value": 30,
+                    "density": {
+                        "enable": false,
+                        "value_area":900
+                    }
+                },
+                "shape": {
+                    "type": "image",
+                    "image": {
+                        "src": "https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/fire01.png", 
+                        "width": 54, 
+                        "height": 28
+                    }
+                },
+                "opacity": {
+                    "value": 1,
+                    "random": false,
+                },
+                "size": {
+                    "value": 10,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 30,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": false,
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "top-left",
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 650,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": false,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": false,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+            },
+            "retina_detect": true
+        });
+
+        particlesJS("particles-right", {
+            "particles": {
+                "number": {
+                    "value": 30,
+                    "density": {
+                        "enable": false,
+                        "value_area":900
+                    }
+                },
+                "shape": {
+                    "type": "image",
+                    "image": {
+                        "src": "https://web-files-tokyo-cdn.masangsoft.com/public/DK/event/2024/0125/fire02.png", 
+                        "width": 26, 
+                        "height": 24
+                    }
+                },
+                "opacity": {
+                    "value": 1,
+                    "random": false,
+                },
+                "size": {
+                    "value": 10,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 30,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": false,
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "top-right",
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 650,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": false,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": false,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+            },
+            "retina_detect": true
+        });
+
+        var elBtnClose = jQuery('#btnClose');
+        elBtnClose.on("click", function() {
+            if (confirm('오늘 하루 그만 보시겠습니까?')) {
+                jQuery.cookie('dk_event', '1', {
+                    expires: 1,
+                    path: '/'
+                });
+                return true;
+            } else {
+                return false;
+            }
+        });
+    });
+</script>
